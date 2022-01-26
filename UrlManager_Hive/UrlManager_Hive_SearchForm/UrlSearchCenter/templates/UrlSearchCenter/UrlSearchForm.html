@@ -1,0 +1,234 @@
+{% load static %}
+
+
+<!doctype html>
+<html>
+
+<head><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<title>Web Page Search Centre</title>
+<link rel="stylesheet" type="text/css" href="{% static 'UrlSearchCenter/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'UrlSearchCenter/css/style.css' %}">
+<script src="{% static 'UrlSearchCenter/js/jquery.min.js' %}"></script>
+<script src="{% static 'UrlSearchCenter/js/bootstrap.min.js' %}"></script>
+<link rel="icon" href="{% static 'UrlSearchCenter/img/logo-icon.ico' %}">
+</head>
+
+<body>
+<div class="top-area">
+	<header>
+		<input type="hidden" value="profile-taxpayer-search.html" id="screenHtmlURL1"><script src="include/insight-header.js"></script>
+	</header>
+
+	<section>
+		<div class="row" style="margin:0px 10px 0px 10px;">
+					<div class="tab-content" >
+						<div class="filter-area" id='filtercriteria' style='display:block'>
+						  <form action="{% url 'UrlSearchResult' %}" method="post">
+						  {% csrf_token %}	
+							<div id="G" class="sidebar-collapse collapse in" aria-expanded="true">
+								    <table style="width:100%;border:0px">
+									<tbody>
+									<tr style='border-bottom: 1px solid #b0b0b0;'>
+										<td colspan='2' class='search-title' style='border-left:1px solid #b0b0b0;border-right:1px solid #b0b0b0;    padding-right: 0;'>
+										<input type="submit" value="Apply Filter">
+										</td>
+									</tr>
+								    </tbody>
+									</table>
+									
+                            {% for category, tagData in caTag_Dict.items %}
+                            <div class="sidefilter" style="width:8.3%;">
+                            <table style="width:100%;">
+                                      <thead>
+    	                                      <tr>
+    		                                     <td class='tab-heading' style='border-bottom:1px solid #b0b0b0;'><a class="bold">{{category|upper}}</a></td>
+    	                                      </tr>
+	                                   </thead>
+	                                   <tbody>
+    		                                   {% for tag, tag_count in tagData.tags|slice:rowRange %} 
+    	                                       <tr>
+    		                                      <td><a><input type='checkbox' name="tag" id='{{category}}.{{tag}}' value='{{category}}.{{tag}}'>{{tag|capfirst}} ({{tag_count}})</a></td>
+    	                                       </tr>
+    	                                        {% endfor %}
+	                                   </tbody>
+                            </table>
+                            </div>
+                            {% endfor %}
+
+									<table style="width:100%;border-bottom:0" border='1' bordercolor="#b0b0b0">
+										<tr>
+											<td style="border-bottom:0"><a data-toggle='modal' data-target='#more' class='button2' style='float:right'>+ More</a></td>
+										</tr>
+									</table>
+								    <hr>
+							</div>
+						  </form>
+						</div>
+					  </div>
+		</div>
+	</section>
+</div>
+</body>
+</html>
+<script>
+function goBack() {
+    window.history.back();
+}
+</script>
+<script>
+
+function afterclick() {
+    document.getElementById("afterclick").style.display = "block";
+   document.getElementById("beforeclick").style.display = "none";
+}
+function rollup() {
+    document.getElementById("afterclick").style.display = "none";
+   document.getElementById("beforeclick").style.display = "block";
+}
+$(document).ready(function(){
+    $('#purpose').on('change', function() {
+      if ( this.value == '1')
+      {
+        $("#afterclick").show();
+		$("#beforeclick").hide();
+      }
+      else
+      {
+        $("#afterclick").hide();
+		$("#beforeclick").show();
+      }
+    });
+});
+$(document).ready(function(){
+ $('.crossfilter').on('click', function(){
+  $(this).hide();
+ });
+ });
+</script>
+<style>
+.questionbar {
+    width: 100%;
+}
+.sidefilter tr td {
+    float: left;
+    width: 100%;
+	    text-align: left;
+    padding-left: 10px;
+}
+.sidefilter table{
+height: 100%;
+}
+.sidefilter{
+    float: left;
+    border-right: 1px solid #b0b0b0;
+}
+.modal-body .sidefilter{
+   float: left;
+    border-right: 1px solid #b0b0b0;
+    height: 500px;
+    overflow-y: hidden;
+}
+.sidefilter table tr {
+    border-bottom: 0;
+    margin: 0;
+    float: none;
+    width: 100%;
+}
+a.crossfilter {
+       margin-right: 6px;
+    border: 1px solid #b0b0b0;
+    padding: 0px 6px;
+    border-radius: 10px;
+    line-height: 20px;
+}
+a.crossfilter span.glyphicon.glyphicon-remove {
+    font-size: 10px;
+    margin-left: 2px;
+}
+.scrollContent::-webkit-scrollbar-thumb{
+background:#eee;
+}
+.scrollContent::-webkit-scrollbar {
+    width: 3px;
+}
+tbody.scrollContent {
+    display: grid;
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+}
+</style>
+
+
+<form action="{% url 'UrlSearchResult' %}" method="post">
+   {% csrf_token %}
+   <div class="modal fade" id="more" role="dialog" style="display: none;">
+    <div class="modal-dialog" style='width: 60%;'>
+      <!-- Modal content-->
+      <div class="modal-content" style="margin-top:6%;">
+      <div class="modal-body">
+			<div id="G" class="sidebar-collapse collapse in" aria-expanded="true">
+				{% for category, tagData in caTag_Dict.items %}
+					<div class="sidefilter" style="width:15%;">
+							<table style="width:100%;border-left:1px solid #b0b0b0">
+								<thead>
+									<tr>
+										<td class="tab-heading" style="border-bottom:1px solid #b0b0b0"><a class="bold">{{category|upper}} ({{tagData.count}})<i class="fa fa-unsorted" style='margin-left:2px;color:#75b9e2'></i></a></td>
+									</tr>
+									<tr>
+										<td style="position: relative;padding: 1px;">
+											<input id="{{category}}" onkeyup="myFunction(this)" class="searchbar" placeholder="Search.." type="text" style="width: 98%;max-width: inherit;margin: 2px;height: 23px;">
+										</td>
+									</tr>
+								</thead>
+							    <tbody class='scrollContent'>
+					            {% for tag, tag_count in tagData.tags %} 
+                                <tr id="{{category}}-{{tag}}" class="{{category}}-tr" type="tr" name="tag-tr">
+							    <td>
+                                   <a>
+                                      <input class="{{category}}-checkbox" type="checkbox" name="tag" id="{{category}}.{{tag}}" value="{{category}}.{{tag}}">{{tag|capfirst}} ({{tag_count}})
+                                   </a>
+                                </td>
+							    </tr>      
+                            {% endfor %}
+							    </tbody>
+							</table>
+					</div>
+				{% endfor %}
+			</div>
+      </div>
+		<hr>
+		
+		<table style="width:100%">
+			<tbody>
+			<tr>
+				<td class="digits"><input type="submit" value="Submit"></td>
+			</tr>
+		    </tbody>
+	    </table>
+    </div>  
+    </div>
+  </div>
+  </form>
+
+
+
+<script>
+function myFunction(htmlInput) {
+	var category, filter, tr, i, tag;
+	category = htmlInput.id;
+	filter = htmlInput.value.toUpperCase();
+	tr = document.getElementsByClassName(category.concat("-tr"));
+    for (i = 0; i < tr.length; i++) {
+        tag = tr[i].id.split("-")[1];
+        if (tag.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }    
+}
+</script>
+
+

@@ -1,0 +1,159 @@
+{% load static %}
+
+<!doctype html>
+
+<script>
+function goBack() {
+    window.history.back();
+}
+</script>
+<script>
+
+function afterclick() {
+    document.getElementById("afterclick").style.display = "block";
+   document.getElementById("beforeclick").style.display = "none";
+}
+function rollup() {
+    document.getElementById("afterclick").style.display = "none";
+   document.getElementById("beforeclick").style.display = "block";
+}
+$(document).ready(function(){
+    $('#purpose').on('change', function() {
+      if ( this.value == '1')
+      {
+        $("#afterclick").show();
+		$("#beforeclick").hide();
+      }
+      else
+      {
+        $("#afterclick").hide();
+		$("#beforeclick").show();
+      }
+    });
+});
+$(document).ready(function(){
+ $('.crossfilter').on('click', function(){
+  $(this).hide();
+ });
+ });
+</script>
+<style>
+.questionbar {
+    width: 100%;
+}
+.sidefilter tr td {
+    float: left;
+    width: 100%;
+	    text-align: left;
+    padding-left: 10px;
+}
+.sidefilter table{
+height: 100%;
+}
+.sidefilter{
+    float: left;
+    border-right: 1px solid #b0b0b0;
+}
+.modal-body .sidefilter{
+   float: left;
+    border-right: 1px solid #b0b0b0;
+    height: 500px;
+    overflow-y: hidden;
+}
+.sidefilter table tr {
+    border-bottom: 0;
+    margin: 0;
+    float: none;
+    width: 100%;
+}
+a.crossfilter {
+       margin-right: 6px;
+    border: 1px solid #b0b0b0;
+    padding: 0px 6px;
+    border-radius: 10px;
+    line-height: 20px;
+}
+a.crossfilter span.glyphicon.glyphicon-remove {
+    font-size: 10px;
+    margin-left: 2px;
+}
+.scrollContent::-webkit-scrollbar-thumb{
+background:#eee;
+}
+.scrollContent::-webkit-scrollbar {
+    width: 3px;
+}
+tbody.scrollContent {
+    display: grid;
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+}
+</style>
+
+
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<title>Web Page Search Centre</title>
+<link rel="stylesheet" type="text/css" href="{% static 'UrlSearchCenter/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'UrlSearchCenter/css/style.css' %}">
+<script src="{% static 'UrlSearchCenter/js/jquery.min.js' %}"></script>
+<script src="{% static 'UrlSearchCenter/js/bootstrap.min.js' %}"></script>
+<link rel="icon" href="{% static 'UrlSearchCenter/img/logo-icon.ico' %}">
+</head>
+<body>
+ <form action="{% url 'UrlSearchResult' %}" method="post">
+   {% csrf_token %}
+   <div class="modal fade in" id="more" role="dialog" style="display: block; padding-left: 21px;">
+    <div class="modal-dialog" style='width: 60%;'>
+      <!-- Modal content-->
+      <div class="modal-content" style="margin-top:6%;">
+      <div class="modal-body">
+			<div id="G" class="sidebar-collapse collapse in" aria-expanded="true">
+				{% for catagory, tags in caTag_Dict.items %}
+					<div class="sidefilter" style="width:15%;">
+							<table style="width:100%;border-left:1px solid #b0b0b0">
+								<thead>
+										<tr>
+												<td class="tab-heading" style="border-bottom:1px solid #b0b0b0"><a class="bold">{{catagory|upper}}<i class="fa fa-unsorted" style='margin-left:2px;color:#75b9e2'></i></a></td>
+										</tr>
+										<tr>
+											<td style="position: relative;padding: 1px;">
+												<input class="searchbar" placeholder="Search.." type="text" style="width: 98%;max-width: inherit;margin: 2px;height: 23px;">
+											  <input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton" style="top: 0px;" onclick="getElementById(&quot;filtercriteria&quot;).style.display=&quot;block&quot;">
+											</td>
+										</tr>
+								</thead>
+								<tbody class='scrollContent'>
+					   {% for tag in tags|slice:rowRange %} 
+                          <tr>
+									 <td>
+                               <a>
+                                  <input type="checkbox" name="tag" id="{{catagory}}.{{ tag }}" value="{{catagory}}.{{ tag }}">{{tag}}
+                               </a>
+                            </td>
+								 </tr>      
+                   {% endfor %}
+								</tbody>
+							</table>
+					</div>
+				{% endfor %}
+			</div>
+      </div>
+		<hr>
+		<table style="width:100%">
+			<tbody><tr>
+				<!--<td class="digits"><a class="button" href="">Submit</a><a class="button" data-dismiss="modal">Cancel</a></td>-->
+				<td class="digits"><input type="submit" value="Submit"></td>
+			</tr>
+		</tbody></table>  
+    </div>  
+    </div>
+  </div>
+  </form>
+</body>
+</html>
+
+
+

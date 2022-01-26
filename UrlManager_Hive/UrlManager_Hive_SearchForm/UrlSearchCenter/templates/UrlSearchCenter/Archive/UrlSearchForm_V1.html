@@ -1,0 +1,17 @@
+<h1>Url Search Form</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'UrlSearchResult' %}" method="post">
+{% csrf_token %}
+{% for catagory, tags in caTag_Dict.items %}
+    <h2>{{catagory}}</h2>
+    {% for tag in tags %}    
+       <input type="checkbox" name="tag" id="{{catagory}}.{{ tag }}" value="{{catagory}}.{{ tag }}">{{tag}}<br>
+    {% endfor %}
+    <br>
+{% endfor %}
+<br>
+<br>
+<input type="submit" value="Search">
+</form>

@@ -1,0 +1,102 @@
+<style type="text/css"> 
+
+#URLs {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    display: {{display}};
+}
+#UrlPagination {
+    display: {{display}};
+}
+.SearchCriteria_table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 30%;
+}
+.SearchCriteria_td, .SearchCriteria_th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.SearchCriteria_th_title {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+  }
+
+
+</style>
+
+<h1>Search Result</h1>
+
+
+<table class="SearchCriteria_table">
+  <tr class="SearchCriteria_tr">
+    <th class="SearchCriteria_th_title"  colspan="2">Search Criteria</th>
+  </tr>
+  <tr class="SearchCriteria_tr">
+    <th class="SearchCriteria_th">Catagory</th>
+    <th class="SearchCriteria_th">Tags</th>
+  </tr>
+{% for catagory, tags in caTag_Dict.items %}
+  <tr class="SearchCriteria_tr">
+    <td class="SearchCriteria_td">{{catagory|upper}}</td>
+    <td class="SearchCriteria_td">{{tags}}</td>
+  </tr>  
+{% endfor %}
+</table>
+
+<br>
+
+<div onclick="showUrlResult()"><h3><u>{{Count}} Results</u></h3</div> 
+
+<br>
+
+<div id="URLs">
+{% for URL in UrlPage %} 
+ <div class="URL">
+	<div>
+		<a href={{URL.html_file}} style="display: inline-block;">
+			<h3>{{URL.heading}}</h3>
+			<div style="display:inline-block"><cite>{{URL.source_link}}</cite></div>
+		</a>
+	</div>
+	<div>
+	    <div>{{URL.preview_text}}</div>
+	    <div><b>Catagory</b> {{URL.tag_category}}</div>
+	    <div><b>Tag</b> {{URL.matched_tag}}</div>
+	    <div><b>Time Stamp : -</b> {{URL.time_stamp}}</div>
+   </div>
+ </div>
+{% endfor %}
+</div>
+
+<br>
+
+<div id="UrlPagination">
+    <span class="step-links">
+        {% if UrlPage.has_previous %}
+            <a href="?page=1"><b>&laquo; first</b></a>
+            <a href="?page={{ UrlPage.previous_page_number }}"><b>previous</b></a>
+        {% endif %}
+
+        <span class="current">
+            <b>Page {{ UrlPage.number }} of {{ UrlPage.paginator.num_pages }}.</b>
+        </span>
+
+        {% if UrlPage.has_next %}
+            <a href="?page={{ UrlPage.next_page_number }}"><b>next</b></a>
+            <a href="?page={{ UrlPage.paginator.num_pages }}"><b>last &raquo;</b></a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+function showUrlResult() {
+    document.getElementById("URLs").style.display = "block";
+    document.getElementById("UrlPagination").style.display = "block";
+}
+</script>
+
